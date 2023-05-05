@@ -15,6 +15,10 @@ export default {
     //热门榜单
     productHot: '/api/product/spu/hot/hot',
     //分类广场||天天优惠
-    recList: '/api/pc/rec_list'
-
+    recList: '/api/pc/rec_list',
+    //商品详情
+    productDetail: '/api/store/product/detail',
+    //商品详情全部分类
+    merchantCategory: '/api/store/merchant/category/lst/'
+    // https://www.dexiaoquan.cn/api/store/merchant/category/lst/3
 }

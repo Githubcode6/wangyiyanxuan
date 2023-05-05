@@ -3,11 +3,13 @@
     <div class="nav min_wrapper_1200">
       <div class="navCon wrapper_1200 acea-row row-between-wrapper">
         <div class="textPic acea-row row-middle">
-          <div class="icon">
-            <img
-              src="https://www.dexiaoquan.cn/uploads/def/20221111/516eb5717bb536a625114559f3f254a6.png"
-            />
-          </div>
+          <a href="/">
+            <div class="icon">
+              <img
+                src="https://www.dexiaoquan.cn/uploads/def/20221111/516eb5717bb536a625114559f3f254a6.png"
+              />
+            </div>
+          </a>
         </div>
         <div class="search acea-row">
           <div class="text acea-row row-middle">

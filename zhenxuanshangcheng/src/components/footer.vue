@@ -14,53 +14,51 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
-    <div class="footer">
-      <div class="wrapper_1200">
-        <ul class="acea-row row-around row-middle">
-          <li class="acea-row row-middle">
-            <div class="picture">
-              <span class="iconfont icon-pinzhong"></span>
-            </div>
-            <div>品种齐全，购物轻松</div>
-          </li>
-          <li class="acea-row row-middle">
-            <div class="picture">
-              <span class="iconfont icon-zhifa"></span>
-            </div>
-            <div>多仓直发，极速配送</div>
-          </li>
-          <li class="acea-row row-middle">
-            <div class="picture">
-              <span class="iconfont icon-hanghuo"></span>
-            </div>
-            <div>正品行货，精致服务</div>
-          </li>
-          <li class="acea-row row-middle">
-            <div class="picture">
-              <span class="iconfont icon-dijia"></span>
-            </div>
-            <div>天天低价，畅选无忧</div>
-          </li>
-        </ul>
-        <div class="recordNum">
-          <div>
-            <a
-              class="copyright"
-              :href="item.url"
-              target="_blank"
-              v-for="item in footerConfig.arr.copyright"
-              :key="item.group_data_id"
-            >
-              <img :src="item.img" alt="" />
-              {{ item.name }}
-            </a>
+  <div class="footer">
+    <div class="wrapper_1200">
+      <ul class="acea-row row-around row-middle">
+        <li class="acea-row row-middle">
+          <div class="picture">
+            <span class="iconfont icon-pinzhong"></span>
           </div>
-          <div class="crmeb-copyright">
-            <div>
-              {{ footerVersion.arr.beian_sn }}
-              {{ footerVersion.arr.year }}
-            </div>
+          <div>品种齐全，购物轻松</div>
+        </li>
+        <li class="acea-row row-middle">
+          <div class="picture">
+            <span class="iconfont icon-zhifa"></span>
+          </div>
+          <div>多仓直发，极速配送</div>
+        </li>
+        <li class="acea-row row-middle">
+          <div class="picture">
+            <span class="iconfont icon-hanghuo"></span>
+          </div>
+          <div>正品行货，精致服务</div>
+        </li>
+        <li class="acea-row row-middle">
+          <div class="picture">
+            <span class="iconfont icon-dijia"></span>
+          </div>
+          <div>天天低价，畅选无忧</div>
+        </li>
+      </ul>
+      <div class="recordNum">
+        <div>
+          <a
+            class="copyright"
+            :href="item.url"
+            target="_blank"
+            v-for="item in footerConfig.arr.copyright"
+            :key="item.group_data_id"
+          >
+            <img :src="item.img" alt="" />
+            {{ item.name }}
+          </a>
+        </div>
+        <div class="crmeb-copyright">
+          <div>
+            {{ footerVersion.arr.beian_sn }}
+            {{ footerVersion.arr.year }}
           </div>
         </div>
       </div>

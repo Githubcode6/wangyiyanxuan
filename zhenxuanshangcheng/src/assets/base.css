@@ -64,10 +64,3 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
-body {
-  background: #f9f9f9;
-  color: #282828;
-  font-size: 14px;
-  font-family: "Microsoft YaHei", "微软雅黑,Arial", "PingFang SC", "Helvetica Neue", Helvetica, "Hiragino Sans GB", "sans-serif";
-}

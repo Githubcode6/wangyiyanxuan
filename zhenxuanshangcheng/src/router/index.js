@@ -36,7 +36,29 @@ const router = createRouter({
     {
       path: '/goods_detail',
       name: 'goodsDetail',
-      component: () => import('../views/GoodsDetail.vue')
+      component: () => import('../views/GoodsDetail.vue'),
+      children: [
+        {
+          path: '/store',
+          name: 'store',
+          component: () => import('../views/StoreIndex.vue'),
+        },
+        {
+          path: '/store/category',
+          name: 'storeCategory',
+          component: () => import('../views/StoreCategory.vue')
+        },
+        {
+          path: '/store/storeCoupon',
+          name: 'storeCoupon',
+          component: () => import('../views/StoreCoupon.vue')
+        }
+      ]
+    },
+    {
+      path: '/orderList',
+      name: 'orderList',
+      component: () => import('../views/orderList.vue')
     }
   ]
 })

@@ -1,98 +1,131 @@
 <script setup>
 import logoTitle from "./components/logo_title.vue";
 import FooterVue from "./components/footer.vue";
-import { ref, onMounted } from "vue";
+import { ref, onBeforeUpdate, watchEffect } from "vue";
 import { getCategoryList, getHomeData } from "./hooks/useRequest";
+import login from "./components/login.vue";
+import { useRouter } from "vue-router";
 const num = ref(0);
 const navData = ref([]);
 const categoryData = ref([]);
 const isShow = ref(true);
-onMounted(() => {
-  getHomeData().then((res) => {
-    navData.value = res.data.data;
-  });
-  getCategoryList().then((res) => {
-    categoryData.value = res.data.data;
-  });
+const router = useRouter();
+let dialogTableVisible = ref(false);
+getHomeData().then((res) => {
+  navData.value = res.data.data;
 });
+getCategoryList().then((res) => {
+  categoryData.value = res.data.data;
+});
+onBeforeUpdate(() => {
+  router.currentRoute.value.fullPath;
+});
+const LoginClick = () => {
+  dialogTableVisible.value = true;
+};
 </script>
 
 <template>
-  <div class="grid-content ep-bg-purple-dark">
-    <div class="headerCon header">
-      <div class="">
-        <router-link to="">
-          <span class="iconfont icon-shoucang2"></span>
-          收藏本站
-        </router-link>
-      </div>
-      <div class="user">
-        <ul class="acea-row">
-          <li class="item">
-            <router-link to="">登录/注册</router-link>
-          </li>
-          <li class="item">
-            <router-link to="">我的订单</router-link>
-          </li>
-          <li class="item">
-            <router-link to="">我的余额</router-link>
-          </li>
-          <li class="item">
-            <router-link to="">商户入驻</router-link>
-          </li>
-          <li class="item">
-            <router-link to="">咨询信息</router-link>
-          </li>
-          <li class="item">
-            <router-link to="">手机商城</router-link>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <logoTitle :num="num"></logoTitle>
-
-    <div class="index wrapper_1200">
-      <div class="categoryMain">
-        <!--  -->
-        <div class="wrapper_1200">
-          <div class="list wrapper_1200 acea-row">
-            <div class="categoryBtn">商品分类</div>
-            <router-link
-              :to="item.link"
-              class="item"
-              v-for="item in navData.pc_home_tab"
-              :key="item.group_data_id"
-              >{{ item.label }}</router-link
-            >
-          </div>
+  <div class="ep-bg-purple-dark">
+    <div class="stickyBox grid-content">
+      <div class="headerCon header">
+        <div class="">
+          <router-link to="">
+            <span class="iconfont icon-shoucang2"></span>
+            收藏本站
+          </router-link>
+          &nbsp;
+          <router-link
+            to="/"
+            class="nuxt-link-active"
+            v-show="router.currentRoute.value.fullPath !== '/'"
+          >
+            <span class="iconfont icon-shouye4"></span>
+            商城首页
+          </router-link>
         </div>
-        <!--  -->
-        <div class="wrapper">
-          <RouterView />
-          <div class="category" v-show="isShow">
-            <div class="sort">
-              <div
-                class="item acea-row row-between-wrapper"
-                v-for="item in categoryData.list"
-                :key="item.store_category_id"
+        <div class="user">
+          <ul class="acea-row">
+            <li class="item" @click="LoginClick">
+              <router-link to="">登录/注册</router-link>
+            </li>
+            <li class="item">
+              <router-link to="/orderList">我的订单</router-link>
+            </li>
+            <li class="item">
+              <router-link to="">我的余额</router-link>
+            </li>
+            <li class="item">
+              <router-link to="">商户入驻</router-link>
+            </li>
+            <li class="item">
+              <router-link to="">咨询信息</router-link>
+            </li>
+            <li class="item">
+              <router-link to="">手机商城</router-link>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <logoTitle :num="num"></logoTitle>
+    </div>
+    <div
+      v-show="
+        router.currentRoute.value.fullPath == '/' ||
+        router.currentRoute.value.fullPath == '/goods_list?type=hot' ||
+        router.currentRoute.value.fullPath == '/goods_list?type=best' ||
+        router.currentRoute.value.fullPath == '/goods_list?type=new' ||
+        router.currentRoute.value.fullPath == '/goods_list?type=good' ||
+        router.currentRoute.value.fullPath == '/goods_cate' ||
+        router.currentRoute.value.fullPath == '/shop_street'
+      "
+    >
+      <div class="index wrapper_1200">
+        <div class="categoryMain">
+          <!--  -->
+          <div class="wrapper_1200">
+            <div class="list wrapper_1200 acea-row">
+              <div class="categoryBtn">商品分类</div>
+              <router-link
+                :to="item.link"
+                class="item"
+                v-for="item in navData.pc_home_tab"
+                :key="item.group_data_id"
+                >{{ item.label }}</router-link
               >
-                <div class="name line1">{{ item.cate_name }}</div>
-                <div class="iconfont icon-you"></div>
-                <div class="sortCon">
-                  <div class="erSort">
-                    <div
-                      class="item acea-row"
-                      v-for="item in item.children"
-                      :key="item.store_category_id"
-                    >
-                      <div class="name">
-                        <span class="cate_name">{{ item.cate_name }}</span>
-                        <div
-                          class="cateList"
-                          v-for="item in item.children"
-                          :key="item.store_category_id"
-                        >
-                          <span class="cateItem">{{ item.cate_name }}</span>
+            </div>
+          </div>
+          <!--  -->
+          <div
+            class="wrapper"
+            v-show="router.currentRoute.value.fullPath === '/'"
+          >
+            <!-- 轮播图侧边栏 -->
+            <div class="category" v-show="isShow">
+              <div class="sort">
+                <div
+                  class="item acea-row row-between-wrapper"
+                  v-for="item in categoryData.list"
+                  :key="item.store_category_id"
+                >
+                  <div class="name line1">{{ item.cate_name }}</div>
+                  <div class="iconfont icon-you"></div>
+                  <div class="sortCon">
+                    <div class="erSort">
+                      <div
+                        class="item acea-row"
+                        v-for="item in item.children"
+                        :key="item.store_category_id"
+                      >
+                        <div class="name">
+                          <span class="cate_name">{{ item.cate_name }}</span>
+                          <div
+                            class="cateList"
+                            v-for="item in item.children"
+                            :key="item.store_category_id"
+                          >
+                            <span class="cateItem">{{ item.cate_name }}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -104,7 +137,14 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <!-- <FooterVue></FooterVue> -->
+    <div class="categoryMain">
+      <!-- 子页面 -->
+      <RouterView />
+    </div>
+    <FooterVue></FooterVue>
+    <el-dialog v-model="dialogTableVisible">
+      <login></login>
+    </el-dialog>
   </div>
 </template>
 <style scoped>
@@ -130,6 +170,11 @@ onMounted(() => {
   font-size: 12px;
   color: #b4b4b4;
   cursor: pointer;
+  z-index: 100;
+}
+.stickyBox {
+  position: sticky;
+  top: 0;
 }
 .headerCon {
   height: 100%;
@@ -161,7 +206,7 @@ onMounted(() => {
 }
 
 .categoryMain {
-  background: #fff;
+  /* background: #fff; */
   position: relative;
 }
 .acea-row {
@@ -193,15 +238,17 @@ onMounted(() => {
   display: inline-block;
   text-align: center;
 }
-
 /*  */
 .wrapper_1200 {
   width: 1200px;
-  margin: 0 auto;
+  margin: 140px auto 0;
+  background-color: white;
 }
 .index .wrapper {
+  width: 100%;
   height: 420px;
-  position: relative;
+  position: absolute;
+  top: 44px;
   cursor: pointer;
 }
 .index .wrapper .category {
