@@ -1,16 +1,23 @@
 <script setup>
 import logoTitle from "./components/logo_title.vue";
 import FooterVue from "./components/footer.vue";
-import { ref, onBeforeUpdate, watchEffect } from "vue";
-import { getCategoryList, getHomeData } from "./hooks/useRequest";
+import { ref, onBeforeUpdate, onUpdated, reactive } from "vue";
+import {
+  getCategoryList,
+  getHomeData,
+  getUserInfo,
+  getcartCount,
+} from "./hooks/useRequest";
 import login from "./components/login.vue";
 import { useRouter } from "vue-router";
-const num = ref(0);
+const count = ref(0);
 const navData = ref([]);
 const categoryData = ref([]);
 const isShow = ref(true);
 const router = useRouter();
 let dialogTableVisible = ref(false);
+const userInfo = reactive({ obj: {} });
+
 getHomeData().then((res) => {
   navData.value = res.data.data;
 });
@@ -23,8 +30,21 @@ onBeforeUpdate(() => {
 const LoginClick = () => {
   dialogTableVisible.value = true;
 };
+//子组件事件
+const closeClick = (value) => {
+  dialogTableVisible.value = value;
+};
+onUpdated(() => {
+  if (JSON.parse(sessionStorage.getItem("userInfo"))) {
+    getUserInfo().then((res) => {
+      userInfo.obj = res.data.data;
+    });
+    getcartCount().then((res) => {
+      count.value = ~~res.data.data[0].count;
+    });
+  }
+});
 </script>
-
 <template>
   <div class="ep-bg-purple-dark">
     <div class="stickyBox grid-content">
@@ -46,8 +66,18 @@ const LoginClick = () => {
         </div>
         <div class="user">
           <ul class="acea-row">
-            <li class="item" @click="LoginClick">
+            <li class="item" v-if="!userInfo.obj.account" @click="LoginClick">
               <router-link to="">登录/注册</router-link>
+            </li>
+            <li class="item" v-else>
+              <router-link to="" class="item acea-row row-middle">
+                <div class="pictrue">
+                  <img src="https://www.dexiaoquan.cn/static/f.png" />
+                </div>
+                <p class="line1" style="max-width: 135px">
+                  {{ userInfo.obj.nickname }}
+                </p>
+              </router-link>
             </li>
             <li class="item">
               <router-link to="/orderList">我的订单</router-link>
@@ -67,7 +97,7 @@ const LoginClick = () => {
           </ul>
         </div>
       </div>
-      <logoTitle :num="num"></logoTitle>
+      <logoTitle :count="count"></logoTitle>
     </div>
     <div
       v-show="
@@ -139,12 +169,17 @@ const LoginClick = () => {
     </div>
     <div class="categoryMain">
       <!-- 子页面 -->
-      <RouterView />
+      <router-view v-slot="{ Component }">
+        <keep-alive>
+          <component :is="Component" />
+        </keep-alive>
+      </router-view>
     </div>
     <FooterVue></FooterVue>
-    <el-dialog v-model="dialogTableVisible">
-      <login></login>
-    </el-dialog>
+    <!-- 登录 -->
+    <div v-if="dialogTableVisible">
+      <login :isShow="dialogTableVisible" @closeClick="closeClick"></login>
+    </div>
   </div>
 </template>
 <style scoped>
@@ -184,10 +219,7 @@ const LoginClick = () => {
   align-items: center;
   justify-content: space-between;
 }
-.acea-row {
-  display: flex;
-  flex-wrap: wrap;
-}
+
 .user .acea-row .item {
   margin-right: 8px;
   position: relative;
@@ -204,6 +236,17 @@ const LoginClick = () => {
   top: 50%;
   margin-top: -7px;
 }
+.header .user .item .pictrue {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+.header .user .item .pictrue img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
 
 .categoryMain {
   /* background: #fff; */
@@ -215,6 +258,7 @@ const LoginClick = () => {
   -moz-box-lines: multiple;
   -o-box-lines: multiple;
   flex-wrap: wrap;
+  align-items: center;
 }
 .categoryMain .categoryBtn {
   width: 208px;

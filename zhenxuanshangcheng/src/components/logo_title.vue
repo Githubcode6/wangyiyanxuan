@@ -21,7 +21,7 @@
         </div>
         <a href="" class="cartNum">
           <span class="iconfont icon-dingbu-gouwuche"></span>
-          购物车 ({{ num }})
+          购物车 ({{ count }})
         </a>
       </div>
     </div>
@@ -29,7 +29,7 @@
 </template>
 <script setup>
 defineProps({
-  num: {
+  count: {
     type: Number,
     required: true,
   },

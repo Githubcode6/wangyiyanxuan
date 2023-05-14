@@ -15,6 +15,12 @@ const hotNew = reactive({ arr: [] });
 const HotData = reactive({ arr: [] });
 const Merchant = ref([]);
 const ProductHot = ref([]);
+const RecList = ref([]);
+const RecListLoad = ref([]);
+const isShow = ref(true);
+const DomScroll = ref([]);
+const loadingicon = ref(null);
+const newCommodity = ref(false);
 
 const pictureArr = reactive({
   arr: [
@@ -24,32 +30,29 @@ const pictureArr = reactive({
   ],
 });
 
-const RecList = ref([]);
-const RecListLoad = ref([]);
-const isShow = ref(true);
-const DomScroll = ref([]);
-const loadingicon = ref(null);
-
 getHomeData().then((res) => {
   navData.value = res.data.data;
 });
 getProductBest({ page: 1, limit: 3, common: 1 }).then((res) => {
   productBest.arr = res.data.data;
 });
-//首发新品
-getProductNew({ page: 1, limit: 5, common: 1 }).then((res) => {
-  hotNew.arr = res.data.data;
-});
-//推荐单品
-getHot({ page: 1, limit: 4, common: 1 }).then((res) => {
-  HotData.arr = res.data.data;
-});
-getMerchant({ page: 1, limit: 2, common: 1 }).then((res) => {
-  Merchant.value = res.data.data.list;
-});
-getProductHot({ page: 1, limit: 3, common: 1 }).then((res) => {
-  ProductHot.value = res.data.data;
-});
+if (newCommodity.value) {
+  //首发新品
+  getProductNew({ page: 1, limit: 5, common: 1 }).then((res) => {
+    hotNew.arr = res.data.data;
+  });
+  //推荐单品
+  getHot({ page: 1, limit: 4, common: 1 }).then((res) => {
+    HotData.arr = res.data.data;
+  });
+  getMerchant({ page: 1, limit: 2, common: 1 }).then((res) => {
+    Merchant.value = res.data.data.list;
+  });
+  getProductHot({ page: 1, limit: 3, common: 1 }).then((res) => {
+    ProductHot.value = res.data.data;
+  });
+}
+
 getRecList({ page: 1, limit: 3 }).then((res) => {
   RecList.value = res.data.data;
 });
@@ -79,6 +82,10 @@ function load() {
 //点击返回顶部
 function ScrollTopClick() {
   document.documentElement.scrollTop = 0;
+}
+//点击跳到分类广场
+function classifyClick() {
+  document.documentElement.scrollTop = 900;
 }
 onMounted(() => {
   window.addEventListener("scroll", load);
@@ -166,7 +173,8 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <div id="page3" class="newGoodsList">
+      <!-- 首发新品 -->
+      <div id="page3" class="newGoodsList" v-if="newCommodity">
         <div class="publicTitle acea-row row-between-wrapper">
           <div class="title acea-row row-middle">
             <div class="pictrue">
@@ -203,7 +211,12 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <div id="page5" class="Recommended acea-row row-middle">
+      <!-- 首发新品 -->
+      <div
+        id="page5"
+        class="Recommended acea-row row-middle"
+        v-if="newCommodity"
+      >
         <div class="list">
           <div class="publicTitle acea-row row-between-wrapper">
             <div class="title acea-row row-middle">
@@ -299,6 +312,7 @@ onMounted(() => {
           </div>
         </div>
       </div>
+      <!-- 分类广场 -->
       <div id="page4" class="classify">
         <div class="classify-title">
           <span>分类广场</span>
@@ -409,10 +423,10 @@ onMounted(() => {
           <div class="item">
             <div>精品<br />推荐</div>
           </div>
-          <div class="item">
+          <div class="item" v-if="newCommodity">
             <div>火爆<br />新品</div>
           </div>
-          <div class="item">
+          <div class="item" @click="classifyClick">
             <div>分类<br />广场</div>
           </div>
           <div class="item">

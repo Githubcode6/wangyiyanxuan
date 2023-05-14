@@ -30,6 +30,7 @@ if (
 } else {
   getProductDetail(router.currentRoute.value.query.id).then((res) => {
     currentImgSrc.value = res.data.data.image;
+    console.log(res.data.data);
     productDetail.value = res.data.data;
   });
   console.log(5555);
@@ -38,14 +39,14 @@ if (
 const handleChange = (value) => {
   console.log(value);
 };
-const onMouseEnter = (item) => {
-  currentImgSrc.value = item.explicitOriginalTarget.currentSrc;
-  isActive.value = item.target.swiperSlideIndex;
+const onMouseEnter = (e, item) => {
+  currentImgSrc.value = item;
+  isActive.value = e.target.swiperSlideIndex;
 };
- onUpdated(() => {
+onUpdated(() => {
   getProductDetail(router.currentRoute.value.query.id).then((res) => {
     currentImgSrc.value = res.data.data.image;
-   productDetail.value = res.data.data;
+    productDetail.value = res.data.data;
   });
 });
 </script>
@@ -135,7 +136,7 @@ const onMouseEnter = (item) => {
               <swiper-slide
                 v-for="(item, index) in productDetail.slider_image"
                 :key="index"
-                @mouseenter="onMouseEnter"
+                @mouseenter="onMouseEnter($event, item)"
               >
                 <div
                   style="height: 100%"
@@ -317,7 +318,7 @@ const onMouseEnter = (item) => {
               :key="item.product_id"
             >
               <router-link
-                :to="`/goods_detail?id=${item.product_id}`"
+                :to="`/goods_detail?id=${item.product_id}&mer_id=${item.mer_id}`"
                 class="item"
               >
                 <div class="image">
